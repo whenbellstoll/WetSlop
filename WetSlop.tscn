@@ -1,11 +1,14 @@
-[gd_scene load_steps=13 format=3 uid="uid://cs0g26jv2gj2v"]
+[gd_scene load_steps=28 format=3 uid="uid://cs0g26jv2gj2v"]
 
 [ext_resource type="PackedScene" uid="uid://8ur7jhy1qo8x" path="res://Models/low_poly_oil_drum.glb" id="1_55cjc"]
+[ext_resource type="Script" path="res://main.gd" id="1_sbs3y"]
 [ext_resource type="Texture2D" uid="uid://cw6p11avvxnid" path="res://Textures/Asphalt014_4K_Color.jpg" id="2_ftl4x"]
 [ext_resource type="Texture2D" uid="uid://dbk346uatnbx1" path="res://Textures/Asphalt014_4K_NormalGL.jpg" id="3_gu3ay"]
 [ext_resource type="Texture2D" uid="uid://ttib3bj0ag0p" path="res://Textures/brick_4_diff_4k.jpg" id="5_2t1x3"]
 [ext_resource type="Texture2D" uid="uid://dnj6l852c30aq" path="res://Textures/brick_4_nor_gl_4k.jpg" id="5_vrp6v"]
 [ext_resource type="Texture2D" uid="uid://ckh7kepoqrinf" path="res://Textures/brick_4_rough_4k.jpg" id="6_76ihq"]
+[ext_resource type="Shader" path="res://simulation.gdshader" id="7_qrtxm"]
+[ext_resource type="Shader" uid="uid://sicj3g6ao7m5" path="res://WetSlop.tres" id="8_ku576"]
 
 [sub_resource type="Environment" id="Environment_j8ogl"]
 ambient_light_energy = 0.2
@@ -29,7 +32,71 @@ normal_enabled = true
 normal_texture = ExtResource("5_vrp6v")
 uv1_scale = Vector3(14, 7, 7)
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_3b4xd"]
+viewport_path = NodePath("Collision")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_0uho4"]
+viewport_path = NodePath("Simulation")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e334i"]
+resource_local_to_scene = true
+shader = ExtResource("7_qrtxm")
+shader_parameter/phase = 0.2
+shader_parameter/attenuation = 0.999
+shader_parameter/deltaUV = 3.0
+shader_parameter/sim_text = SubResource("ViewportTexture_0uho4")
+shader_parameter/col_text = SubResource("ViewportTexture_3b4xd")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_qpwdq"]
+viewport_path = NodePath("Simulation")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yyghk"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("8_ku576")
+shader_parameter/simulation = SubResource("ViewportTexture_qpwdq")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4u507"]
+material = SubResource("ShaderMaterial_yyghk")
+size = Vector2(1, 1)
+subdivide_width = 512
+subdivide_depth = 512
+
+[sub_resource type="Environment" id="Environment_8eotr"]
+background_mode = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_xrshj"]
+
+[sub_resource type="Animation" id="Animation_v6m6d"]
+resource_name = "up_down"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1.1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0.0599195, 1.38246, -0.985391), Vector3(0.06, -0.193, -0.985), Vector3(0.0599195, 1.38246, -0.985391)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_akqmv"]
+_data = {
+"up_down": SubResource("Animation_v6m6d")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_ulojf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t6pbb"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
 [node name="Node3D" type="Node3D"]
+script = ExtResource("1_sbs3y")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.057199, 4.28102, -0.827155)
@@ -41,10 +108,11 @@ spot_angle = 46.82
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.963073, 0.269239, 0, -0.269239, 0.963073, 0, 1.93355, 2.73151)
+cull_mask = 524287
 environment = SubResource("Environment_j8ogl")
 
 [node name="low_poly_oil_drum" parent="." instance=ExtResource("1_55cjc")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00458097, -0.266054, -0.921885)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0996344, -0.266054, -0.931594)
 
 [node name="Floor" type="MeshInstance3D" parent="."]
 transform = Transform3D(8.33734, 0, 0, 0, 1, 0, 0, 0, 10.5262, 0, -1.28112, -0.661235)
@@ -52,7 +120,50 @@ material_override = SubResource("StandardMaterial3D_terdf")
 mesh = SubResource("PlaneMesh_dfakd")
 surface_material_override/0 = SubResource("StandardMaterial3D_hmqdq")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Walls" type="MeshInstance3D" parent="."]
 transform = Transform3D(15.7119, 0, 0, 0, 8.96793, 0, 0, 0, 19.3065, 0, 2.9771, -1.23362)
 mesh = SubResource("BoxMesh_brhxy")
 surface_material_override/0 = SubResource("StandardMaterial3D_prjum")
+
+[node name="Simulation" type="SubViewport" parent="."]
+size = Vector2i(128, 128)
+render_target_clear_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="Simulation"]
+material = SubResource("ShaderMaterial_e334i")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Slop" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, 0.052, 0.8, -0.928)
+mesh = SubResource("PlaneMesh_4u507")
+
+[node name="Collision" type="SubViewport" parent="."]
+size = Vector2i(128, 128)
+
+[node name="Camera3D" type="Camera3D" parent="Collision"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.052, -0.31, -0.928)
+cull_mask = 524288
+environment = SubResource("Environment_8eotr")
+projection = 1
+far = 0.99
+
+[node name="Cube" type="Node3D" parent="."]
+transform = Transform3D(0.310803, 0, 0, 0, 0.366214, 0, 0, 0, 0.279054, 0.0599195, 1.38246, -0.985391)
+
+[node name="Mesh" type="MeshInstance3D" parent="Cube"]
+mesh = SubResource("BoxMesh_xrshj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Cube"]
+autoplay = "up_down"
+libraries = {
+"": SubResource("AnimationLibrary_akqmv")
+}
+
+[node name="WaterCollider" type="MeshInstance3D" parent="Cube"]
+layers = 524288
+mesh = SubResource("BoxMesh_ulojf")
+surface_material_override/0 = SubResource("StandardMaterial3D_t6pbb")
