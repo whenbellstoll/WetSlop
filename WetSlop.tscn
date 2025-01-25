@@ -54,6 +54,10 @@ viewport_path = NodePath("Simulation")
 resource_local_to_scene = true
 render_priority = 0
 shader = ExtResource("8_ku576")
+shader_parameter/amplitude = 0.2
+shader_parameter/ColorParameter = Color(0, 0.196078, 0, 0.901961)
+shader_parameter/shallow_color = Color(0, 0.83784, 0, 0.686275)
+shader_parameter/murkiness = 0.5
 shader_parameter/simulation = SubResource("ViewportTexture_qpwdq")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4u507"]
@@ -69,7 +73,7 @@ background_mode = 1
 
 [sub_resource type="Animation" id="Animation_v6m6d"]
 resource_name = "up_down"
-length = 2.0
+length = 4.0
 loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -78,10 +82,10 @@ tracks/0/path = NodePath(".:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1.1, 2),
+"times": PackedFloat32Array(0, 2.1, 4),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(0.0599195, 1.38246, -0.985391), Vector3(0.06, -0.193, -0.985), Vector3(0.0599195, 1.38246, -0.985391)]
+"values": [Vector3(0.0599195, 1.38246, -0.985391), Vector3(0.06, 0.517, -0.985), Vector3(0.0599195, 1.38246, -0.985391)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_akqmv"]
@@ -107,7 +111,7 @@ spot_range = 11.951
 spot_angle = 46.82
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.963073, 0.269239, 0, -0.269239, 0.963073, 0, 1.93355, 2.73151)
+transform = Transform3D(1, 0, 0, 0, 0.893277, 0.449506, 0, -0.449506, 0.893277, 0, 1.93355, 1.20965)
 cull_mask = 524287
 environment = SubResource("Environment_j8ogl")
 
@@ -138,7 +142,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Slop" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, 0.052, 0.8, -0.928)
+transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, 0.052, 0.701205, -0.928)
 mesh = SubResource("PlaneMesh_4u507")
 
 [node name="Collision" type="SubViewport" parent="."]

@@ -19,7 +19,7 @@ void fragment() {
 		texture(sim_text, UV - duv.zy).r +
 		texture(sim_text, UV + duv.zy).r +
 		texture(sim_text, UV - duv.xz).r +
-		texture(sim_text, UV - duv.xz).r - 4.0 * c.r )) * attenuation;
+		texture(sim_text, UV + duv.xz).r - 4.0 * c.r )) * attenuation;
 		
 	vec2 col_uv = vec2(UV.x, 1.0 - UV.y);
 	float col = texture(col_text, col_uv).r;
