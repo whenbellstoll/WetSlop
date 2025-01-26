@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://cs0g26jv2gj2v"]
+[gd_scene load_steps=30 format=3 uid="uid://cs0g26jv2gj2v"]
 
 [ext_resource type="PackedScene" uid="uid://8ur7jhy1qo8x" path="res://Models/low_poly_oil_drum.glb" id="1_55cjc"]
 [ext_resource type="Script" path="res://main.gd" id="1_sbs3y"]
@@ -11,7 +11,7 @@
 [ext_resource type="Shader" uid="uid://sicj3g6ao7m5" path="res://WetSlop.tres" id="8_ku576"]
 
 [sub_resource type="Environment" id="Environment_j8ogl"]
-ambient_light_energy = 0.2
+ambient_light_energy = 0.02
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_terdf"]
 albedo_texture = ExtResource("2_ftl4x")
@@ -47,6 +47,9 @@ shader_parameter/deltaUV = 3.0
 shader_parameter/sim_text = SubResource("ViewportTexture_0uho4")
 shader_parameter/col_text = SubResource("ViewportTexture_3b4xd")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_5dtca"]
+viewport_path = NodePath("Cull")
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_qpwdq"]
 viewport_path = NodePath("Simulation")
 
@@ -59,10 +62,12 @@ shader_parameter/ColorParameter = Color(0, 0.196078, 0, 0.901961)
 shader_parameter/shallow_color = Color(0, 0.83784, 0, 0.686275)
 shader_parameter/murkiness = 0.5
 shader_parameter/simulation = SubResource("ViewportTexture_qpwdq")
+shader_parameter/Cull = SubResource("ViewportTexture_5dtca")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4u507"]
+resource_local_to_scene = true
 material = SubResource("ShaderMaterial_yyghk")
-size = Vector2(1, 1)
+size = Vector2(1.3, 1.3)
 subdivide_width = 512
 subdivide_depth = 512
 
@@ -99,6 +104,9 @@ _data = {
 shading_mode = 0
 albedo_color = Color(1, 0, 0, 1)
 
+[sub_resource type="Environment" id="Environment_mnyer"]
+background_mode = 1
+
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_sbs3y")
 
@@ -107,8 +115,8 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.0571
 light_color = Color(0.980392, 0.980392, 0.882353, 1)
 light_energy = 7.101
 light_indirect_energy = 1.162
-spot_range = 11.951
-spot_angle = 46.82
+spot_range = 6.637
+spot_angle = 30.46
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.893277, 0.449506, 0, -0.449506, 0.893277, 0, 1.93355, 1.20965)
@@ -119,7 +127,7 @@ environment = SubResource("Environment_j8ogl")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0996344, -0.266054, -0.931594)
 
 [node name="Floor" type="MeshInstance3D" parent="."]
-transform = Transform3D(8.33734, 0, 0, 0, 1, 0, 0, 0, 10.5262, 0, -1.28112, -0.661235)
+transform = Transform3D(8.33734, 0, 0, 0, 1, 0, 0, 0, 10.5262, 0, -1.301, -0.661)
 material_override = SubResource("StandardMaterial3D_terdf")
 mesh = SubResource("PlaneMesh_dfakd")
 surface_material_override/0 = SubResource("StandardMaterial3D_hmqdq")
@@ -142,17 +150,18 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Slop" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.19249e-08, 0, -1, 0, 1, 0, 1, 0, 1.19249e-08, 0.052, 0.701205, -0.928)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.106931, 0.63586, -0.941387)
 mesh = SubResource("PlaneMesh_4u507")
 
 [node name="Collision" type="SubViewport" parent="."]
 size = Vector2i(128, 128)
 
 [node name="Camera3D" type="Camera3D" parent="Collision"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.052, -0.31, -0.928)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.107, -0.31, -0.941)
 cull_mask = 524288
 environment = SubResource("Environment_8eotr")
 projection = 1
+size = 1.3
 far = 0.99
 
 [node name="Cube" type="Node3D" parent="."]
@@ -162,12 +171,24 @@ transform = Transform3D(0.310803, 0, 0, 0, 0.366214, 0, 0, 0, 0.279054, 0.059919
 mesh = SubResource("BoxMesh_xrshj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Cube"]
-autoplay = "up_down"
 libraries = {
 "": SubResource("AnimationLibrary_akqmv")
 }
+autoplay = "up_down"
 
 [node name="WaterCollider" type="MeshInstance3D" parent="Cube"]
 layers = 524288
 mesh = SubResource("BoxMesh_ulojf")
 surface_material_override/0 = SubResource("StandardMaterial3D_t6pbb")
+
+[node name="Cull" type="SubViewport" parent="."]
+size = Vector2i(128, 128)
+render_target_clear_mode = 2
+
+[node name="Camera3D" type="Camera3D" parent="Cull"]
+transform = Transform3D(1, 0, 0, 0, 1.19249e-08, 1, 0, -1, 1.19249e-08, 0.107, 0.273971, -0.941)
+cull_mask = 1
+environment = SubResource("Environment_mnyer")
+projection = 1
+size = 1.3
+far = 1.56
