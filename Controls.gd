@@ -1,0 +1,21 @@
+extends Camera3D
+
+var length = 50
+var startPos : Vector2
+var curPos : Vector2
+var swiping = false
+var Hand : Node3D
+var threshold = 10
+
+func _ready():
+	Hand = get_tree().get_root().get_node("Node3D/Hand")
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_pressed("wheel_up") && Hand.transform.origin.y < 2:
+		Hand.transform.origin = Vector3(Hand.transform.origin.x, Hand.transform.origin.y + delta, Hand.transform.origin.z)
+	if Input.is_action_pressed("wheel_down") && Hand.transform.origin.y > 0.6:
+		Hand.transform.origin = Vector3(Hand.transform.origin.x, Hand.transform.origin.y - delta, Hand.transform.origin.z)
+			
+	pass

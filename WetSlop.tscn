@@ -1,9 +1,11 @@
-[gd_scene load_steps=30 format=3 uid="uid://cs0g26jv2gj2v"]
+[gd_scene load_steps=32 format=3 uid="uid://cs0g26jv2gj2v"]
 
 [ext_resource type="PackedScene" uid="uid://8ur7jhy1qo8x" path="res://Models/low_poly_oil_drum.glb" id="1_55cjc"]
 [ext_resource type="Script" path="res://main.gd" id="1_sbs3y"]
+[ext_resource type="PackedScene" uid="uid://bn2xqgihhqarl" path="res://Models/hand_for_vr.tscn" id="2_4hyh0"]
 [ext_resource type="Texture2D" uid="uid://cw6p11avvxnid" path="res://Textures/Asphalt014_4K_Color.jpg" id="2_ftl4x"]
 [ext_resource type="Texture2D" uid="uid://dbk346uatnbx1" path="res://Textures/Asphalt014_4K_NormalGL.jpg" id="3_gu3ay"]
+[ext_resource type="Script" path="res://Controls.gd" id="4_btm84"]
 [ext_resource type="Texture2D" uid="uid://ttib3bj0ag0p" path="res://Textures/brick_4_diff_4k.jpg" id="5_2t1x3"]
 [ext_resource type="Texture2D" uid="uid://dnj6l852c30aq" path="res://Textures/brick_4_nor_gl_4k.jpg" id="5_vrp6v"]
 [ext_resource type="Texture2D" uid="uid://ckh7kepoqrinf" path="res://Textures/brick_4_rough_4k.jpg" id="6_76ihq"]
@@ -110,6 +112,9 @@ background_mode = 1
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_sbs3y")
 
+[node name="Hand" parent="." instance=ExtResource("2_4hyh0")]
+transform = Transform3D(9.55343e-17, -2.18557e-09, -0.05, -0.05, -2.18557e-09, 0, -2.18557e-09, 0.05, -2.18557e-09, 0.576, 1.51, -0.921)
+
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.057199, 4.28102, -0.827155)
 light_color = Color(0.980392, 0.980392, 0.882353, 1)
@@ -122,6 +127,7 @@ spot_angle = 30.46
 transform = Transform3D(1, 0, 0, 0, 0.893277, 0.449506, 0, -0.449506, 0.893277, 0, 1.93355, 1.20965)
 cull_mask = 524287
 environment = SubResource("Environment_j8ogl")
+script = ExtResource("4_btm84")
 
 [node name="low_poly_oil_drum" parent="." instance=ExtResource("1_55cjc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0996344, -0.266054, -0.931594)
@@ -166,15 +172,16 @@ far = 0.99
 
 [node name="Cube" type="Node3D" parent="."]
 transform = Transform3D(0.310803, 0, 0, 0, 0.366214, 0, 0, 0, 0.279054, 0.0599195, 1.38246, -0.985391)
+visible = false
 
 [node name="Mesh" type="MeshInstance3D" parent="Cube"]
 mesh = SubResource("BoxMesh_xrshj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Cube"]
+autoplay = "up_down"
 libraries = {
 "": SubResource("AnimationLibrary_akqmv")
 }
-autoplay = "up_down"
 
 [node name="WaterCollider" type="MeshInstance3D" parent="Cube"]
 layers = 524288
