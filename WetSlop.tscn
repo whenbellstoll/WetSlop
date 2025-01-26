@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://cs0g26jv2gj2v"]
+[gd_scene load_steps=36 format=3 uid="uid://cs0g26jv2gj2v"]
 
 [ext_resource type="PackedScene" uid="uid://8ur7jhy1qo8x" path="res://Models/low_poly_oil_drum.glb" id="1_55cjc"]
 [ext_resource type="Script" path="res://main.gd" id="1_sbs3y"]
@@ -11,6 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://ckh7kepoqrinf" path="res://Textures/brick_4_rough_4k.jpg" id="6_76ihq"]
 [ext_resource type="Shader" path="res://simulation.gdshader" id="7_qrtxm"]
 [ext_resource type="Shader" uid="uid://sicj3g6ao7m5" path="res://WetSlop.tres" id="8_ku576"]
+[ext_resource type="AudioStream" uid="uid://do4phuovbcpot" path="res://SFX/Slap 01a.wav" id="12_rjxmr"]
+[ext_resource type="AudioStream" uid="uid://cwujkkdxa3qx2" path="res://SFX/Slap 01b.wav" id="13_5hofn"]
+[ext_resource type="AudioStream" uid="uid://bk1m1bh6s41dy" path="res://SFX/Slap 01c.wav" id="14_ct4xv"]
 
 [sub_resource type="Environment" id="Environment_j8ogl"]
 ambient_light_energy = 0.02
@@ -106,6 +109,16 @@ _data = {
 shading_mode = 0
 albedo_color = Color(1, 0, 0, 1)
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_13a54"]
+playback_mode = 1
+streams_count = 3
+stream_0/stream = ExtResource("12_rjxmr")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("13_5hofn")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("14_ct4xv")
+stream_2/weight = 1.0
+
 [sub_resource type="Environment" id="Environment_mnyer"]
 background_mode = 1
 
@@ -178,15 +191,18 @@ visible = false
 mesh = SubResource("BoxMesh_xrshj")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Cube"]
-autoplay = "up_down"
 libraries = {
 "": SubResource("AnimationLibrary_akqmv")
 }
+autoplay = "up_down"
 
 [node name="WaterCollider" type="MeshInstance3D" parent="Cube"]
 layers = 524288
 mesh = SubResource("BoxMesh_ulojf")
 surface_material_override/0 = SubResource("StandardMaterial3D_t6pbb")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_13a54")
 
 [node name="Cull" type="SubViewport" parent="."]
 size = Vector2i(128, 128)

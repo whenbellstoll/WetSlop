@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://cwujkkdxa3qx2"
+path="res://.godot/imported/Slap 01b.wav-75eee7b6658dea68908839a557e65cca.sample"
+
+[deps]
+
+source_file="res://SFX/Slap 01b.wav"
+dest_files=["res://.godot/imported/Slap 01b.wav-75eee7b6658dea68908839a557e65cca.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
